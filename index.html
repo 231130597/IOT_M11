@@ -3,24 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Plant Greenhouse Dashboard</title>
+    <title>Greenhouse Monitor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* CSS Sederhana untuk Tampilan */
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 350px; text-align: center; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        button { background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
-        button:hover { background-color: #218838; }
-        button#logoutBtn { background-color: #dc3545; margin-top: 20px; }
-        button#logoutBtn:hover { background-color: #c82333; }
+        /* --- TAMPILAN MODERN --- */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            color: #333;
+        }
+
+        .container { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+            width: 380px; 
+            text-align: center; 
+        }
+
+        h2 { color: #2c3e50; margin-bottom: 20px; font-weight: 600; }
+        p { font-size: 14px; color: #666; margin-bottom: 20px; }
+
+        input { 
+            width: 100%; padding: 12px; margin: 8px 0; 
+            border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; 
+            transition: 0.3s;
+        }
+        input:focus { border-color: #38ef7d; outline: none; }
+
+        button { 
+            background: linear-gradient(to right, #11998e, #38ef7d); 
+            color: white; border: none; padding: 12px; border-radius: 10px; 
+            cursor: pointer; width: 100%; font-size: 16px; font-weight: bold;
+            margin-top: 10px; box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+        button#logoutBtn { background: #ff6b6b; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4); margin-top: 25px; }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
+        }
+
+        .card { 
+            background: white; padding: 15px; border-radius: 15px; 
+            text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0; transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .card.full-width { grid-column: span 2; }
+
+        .icon { font-size: 2rem; display: block; margin-bottom: 5px; }
+        .card h3 { margin: 5px 0; font-size: 14px; color: #888; font-weight: normal; }
+        .value { font-size: 28px; font-weight: bold; color: #2c3e50; }
         
-        /* Style untuk Kartu Data */
-        .card { background: #e9ecef; margin: 15px 0; padding: 15px; border-radius: 8px; border-left: 5px solid #28a745; text-align: left; }
-        .card h3 { margin: 0 0 10px 0; font-size: 18px; color: #333; }
-        .value { font-size: 24px; font-weight: bold; color: #007bff; }
-        .status { font-size: 14px; color: #666; font-style: italic; }
-        
-        /* Sembunyikan Dashboard saat awal */
+        .status-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; margin-top: 5px; background-color: #eee; font-weight: 600;
+        }
+
         #dashboard { display: none; }
     </style>
 </head>
@@ -28,46 +77,52 @@
 
     <div class="container">
         <div id="loginForm">
-            <h2>Login Greenhouse</h2>
-            <p>Masukkan akun yang sudah didaftarkan di Firebase</p>
-            <input type="email" id="email" placeholder="Email (Contoh: iot@test.com)">
+            <div class="icon">🌿</div>
+            <h2>Greenhouse Login</h2>
+            <p>Masukkan akun IoTM11 Anda</p>
+            <input type="email" id="email" placeholder="Email">
             <input type="password" id="password" placeholder="Password">
-            <button id="loginBtn">Masuk</button>
+            <button id="loginBtn">Masuk Dashboard</button>
         </div>
 
         <div id="dashboard">
-            <h2>Monitoring Tanaman</h2>
+            <h2>Live Monitor 🌿</h2>
+            <p>Status Sensor Realtime</p>
             
-            <div class="card">
-                <h3>💧 Kelembaban Tanah</h3>
-                <div id="soilMoisture" class="value">--%</div>
-                <span id="soilStatus" class="status">Menunggu data...</span>
+            <div class="grid-container">
+                <div class="card">
+                    <span class="icon">💧</span>
+                    <h3>Tanah</h3>
+                    <div id="soilMoisture" class="value">--%</div>
+                    <span id="soilStatus" class="status-badge">...</span>
+                </div>
+
+                <div class="card">
+                    <span class="icon">☀️</span>
+                    <h3>Cahaya</h3>
+                    <div id="lightLevel" class="value">--%</div>
+                    <span id="lightStatus" class="status-badge">...</span>
+                </div>
+
+                <div class="card full-width">
+                    <span class="icon">🚶‍♂️</span>
+                    <h3>Sensor Keamanan</h3>
+                    <div id="motion" class="value">--</div>
+                    <span id="motionStatus" class="status-badge">...</span>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>☀️ Tingkat Cahaya</h3>
-                <div id="lightLevel" class="value">--%</div>
-                <span id="lightStatus" class="status">Menunggu data...</span>
-            </div>
-
-            <div class="card">
-                <h3>🚶 Gerakan (PIR)</h3>
-                <div id="motion" class="value">--</div>
-                <span id="motionStatus" class="status">Menunggu data...</span>
-            </div>
-
-            <button id="logoutBtn">Logout</button>
+            <button id="logoutBtn">Keluar</button>
         </div>
     </div>
 
     <script type="module">
-        // Import fungsi-fungsi penting dari Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         // =======================================================
-        // KONFIGURASI FIREBASE ANDA (PASTE HASIL COPY TADI DISINI)
+        // KONFIGURASI SESUAI GAMBAR/KODE ANDA
         // =======================================================
         const firebaseConfig = {
             apiKey: "AIzaSyD3hAZRnL7yCdgAfbS_Ldy4YUJX1G-81yM",
@@ -80,56 +135,44 @@
             measurementId: "G-NMR9NT38FS"
         };
 
-        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // --- LOGIKA PROGRAM UTAMA ---
+        // --- LOGIKA PROGRAM ---
 
-        // 1. Cek Status Login Pengguna
+        // Cek Login
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Jika sudah login, tampilkan dashboard
                 document.getElementById("loginForm").style.display = "none";
                 document.getElementById("dashboard").style.display = "block";
-                listenToSensors(); // Mulai baca sensor
+                listenToSensors();
             } else {
-                // Jika belum login, tampilkan form login
                 document.getElementById("dashboard").style.display = "none";
                 document.getElementById("loginForm").style.display = "block";
             }
         });
 
-        // 2. Fungsi Tombol Login
+        // Tombol Login
         document.getElementById("loginBtn").addEventListener("click", () => {
             const email = document.getElementById("email").value;
             const pass = document.getElementById("password").value;
-
             signInWithEmailAndPassword(auth, email, pass)
-                .then((userCredential) => {
-                    alert("Login Berhasil!");
-                })
-                .catch((error) => {
-                    alert("Login Gagal: " + error.message);
-                });
+                .then(() => { console.log("Login Berhasil"); })
+                .catch((error) => { alert("Login Gagal: " + error.message); });
         });
 
-        // 3. Fungsi Tombol Logout
+        // Tombol Logout
         document.getElementById("logoutBtn").addEventListener("click", () => {
-            signOut(auth).then(() => {
-                alert("Anda telah logout.");
-            });
+            signOut(auth);
         });
 
-        // 4. Fungsi Membaca Data Sensor Realtime [cite: 458]
+        // Baca Sensor
         function listenToSensors() {
-            const sensorRef = ref(db, "greenhouse/sensors"); // Path sesuai kodingan Arduino
-            
+            const sensorRef = ref(db, "greenhouse/sensors");
             onValue(sensorRef, (snapshot) => {
                 const d = snapshot.val();
                 if (d) {
-                    // Jika data ada, update tampilan
                     if (d.soilMoisture !== undefined) updateSoil(d.soilMoisture);
                     if (d.lightLevel !== undefined) updateLight(d.lightLevel);
                     if (d.motion !== undefined) updateMotion(d.motion);
@@ -137,42 +180,54 @@
             });
         }
 
-        // --- Update UI Kelembaban Tanah [cite: 467-471] ---
+        [cite_start]// Update UI Tanah [cite: 469]
         function updateSoil(value) {
             document.getElementById("soilMoisture").innerText = value + "%";
-            // Logika status sesuai modul
-            let status = "";
-            if (value < 30) status = "Kering (Perlu disiram)";
-            else if (value < 70) status = "Cukup";
-            else status = "Basah";
-            
-            document.getElementById("soilStatus").innerText = "Status: " + status;
+            const elStatus = document.getElementById("soilStatus");
+            if (value < 30) {
+                elStatus.innerText = "Kering (Siram!)";
+                elStatus.style.backgroundColor = "#ffcccc"; elStatus.style.color = "#d63031";
+            } else if (value < 70) {
+                elStatus.innerText = "Cukup";
+                elStatus.style.backgroundColor = "#c8f7c5"; elStatus.style.color = "#00b894";
+            } else {
+                elStatus.innerText = "Basah";
+                elStatus.style.backgroundColor = "#c7ecee"; elStatus.style.color = "#0984e3";
+            }
         }
 
-        // --- Update UI Cahaya [cite: 472-476] ---
+        [cite_start]// Update UI Cahaya [cite: 475]
         function updateLight(value) {
             document.getElementById("lightLevel").innerText = value + "%";
-            // Logika status sesuai modul
-            let status = "";
-            if (value < 30) status = "Redup";
-            else if (value < 70) status = "Cukup";
-            else status = "Terang";
-
-            document.getElementById("lightStatus").innerText = "Status: " + status;
+            const elStatus = document.getElementById("lightStatus");
+            if (value < 30) {
+                elStatus.innerText = "Redup";
+                elStatus.style.backgroundColor = "#dfe6e9"; elStatus.style.color = "#636e72";
+            } else if (value < 70) {
+                elStatus.innerText = "Cukup";
+                elStatus.style.backgroundColor = "#fff3cd"; elStatus.style.color = "#fdcb6e";
+            } else {
+                elStatus.innerText = "Terang";
+                elStatus.style.backgroundColor = "#ffeaa7"; elStatus.style.color = "#e17055";
+            }
         }
 
-        // --- Update UI Gerakan [cite: 477-482] ---
+        [cite_start]// Update UI Gerakan [cite: 479]
         function updateMotion(value) {
-            // Value dari Arduino berupa boolean (true/false) atau 1/0
             const isDetected = (value === true || value === 1);
-            
-            document.getElementById("motion").innerText = isDetected ? "Terdeteksi" : "Tidak Terdeteksi";
-            document.getElementById("motionStatus").innerText = isDetected ? "⚠️ Ada Gerakan!" : "✅ Aman";
-            
-            // Ubah warna teks jika ada gerakan
-            document.getElementById("motion").style.color = isDetected ? "red" : "#007bff";
-        }
+            const elVal = document.getElementById("motion");
+            const elStatus = document.getElementById("motionStatus");
 
+            if (isDetected) {
+                elVal.innerText = "Ada Orang"; elVal.style.color = "#d63031";
+                elStatus.innerText = "Waspada!";
+                elStatus.style.backgroundColor = "#ff7675"; elStatus.style.color = "white";
+            } else {
+                elVal.innerText = "Sepi"; elVal.style.color = "#2c3e50";
+                elStatus.innerText = "Aman";
+                elStatus.style.backgroundColor = "#dfe6e9"; elStatus.style.color = "#636e72";
+            }
+        }
     </script>
 </body>
 </html>
